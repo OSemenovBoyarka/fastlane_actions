@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title><%= @title %></title>
+	<style type="text/css">
+   
+		.flat-table {
+		  display: block;
+		  font-family: sans-serif;
+		  -webkit-font-smoothing: antialiased;
+		  font-size: 120%;
+		  overflow: auto;
+		  width: auto;	  
+		}
+		.flat-table th {
+		  background-color: #70c469;
+		  color: white;
+		  font-weight: normal;
+		  padding: 15px 20px;
+		  text-align: center;
+		}
+		.flat-table td {
+		  background-color: #eeeeee;
+		  color: #6f6f6f;
+		  padding: 15px 20px;
+		}
+		.flat-table td a {
+		  display:block;
+		  width:100%;
+		  color: #6f6f6f;
+		  text-decoration: none;
+		}	
+	</style>
+</head>
+<body>
+    <h2><%= @title %></h2>
+    <h4>Captured on <%= Time.now.strftime('%Y-%m-%d %H:%M') %></h3>
+    <hr>
+	<table class="flat-table">
+	  <tbody>
+		<% @languages.each do |language| %>
+			<tr>
+				<th colspan="<%= @devices.count %>">
+					<%= language %>
+				</th> 
+			</tr>
+			<tr>
+				<% @devices.each do |device| %>
+					<td>
+						<a href="<%= language+'/'+device+'/screenshots.html' %>"><%= device %><a>
+					</td>
+				<% end %>
+			</tr>
+		<% end %>
+	   </tbody>
+	<table>
+</body>
