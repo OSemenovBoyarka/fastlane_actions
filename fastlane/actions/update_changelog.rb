@@ -14,22 +14,19 @@ module Fastlane
     	CHANGELOG_TEMPLATE = "### Fixed\n*\n\n### Added\n*\n\n### Removed\n*"
     
       def self.run(params)
-      #TODO find a way to use get_info_plist_value action instead of copy code from it
-      require 'plist'
+
         changelogFilename ='CHANGELOG.md';
         currentChangelogFilename ='CHANGELOG_CURRENT.md';
 
-        plist = Plist.parse_xml(params[:info_plist_path])
-        version = plist['CFBundleShortVersionString']
-        versionCode = plist['CFBundleVersion']
-        
+        version = params[:version]
+
         currentChangeLog = File.read(currentChangelogFilename)
       	raise "You have not provided changelog for build. Please, fill in file CHANGELOG_CURRENT.md" unless CHANGELOG_TEMPLATE != currentChangeLog
         globalChangeLog = File.read(changelogFilename);
 #       prepending contents of current changelog to existing file
         File.open(changelogFilename, 'w') do |fo|
                 currentDate = Time.now.strftime('%Y-%m-%d')
-                fo.puts "## #{version} (#{versionCode}) - #{ currentDate }"
+                fo.puts "## #{version} - #{ currentDate }"
                 fo.puts currentChangeLog
                 fo.puts "\n"
                 fo.puts globalChangeLog
@@ -60,11 +57,11 @@ module Fastlane
 
       def self.available_options
 [
-FastlaneCore::ConfigItem.new(key: :info_plist_path,
-                             env_name: "FL_UPDATE_CHANGELOG_INFO_PLIST_PATH", # The name of the environment variable
-                             description: "Path to Info.plist to obtain app version", # a short description of this parameter
+FastlaneCore::ConfigItem.new(key: :version,
+                             env_name: "FL_UPDATE_CHANGELOG_VERSION", # The name of the environment variable
+                             description: "Complete version string, which will be added as current version to changelog", # a short description of this parameter
                              verify_block: proc do |value|
-                             raise "No Info.plist path for UpdateChangeLog given, pass using `info_plist_path: 'token'`".red unless (value and not value.empty?)
+                             raise "No new app version for UpdateChangeLog given, pass using `version: 'token'`".red unless (value and not value.empty?)
                              end)
 ]
         # Define all options your action supports.
@@ -82,7 +79,7 @@ FastlaneCore::ConfigItem.new(key: :info_plist_path,
       end
 
       def self.is_supported?(platform)
-         [:ios, :mac].include? platform
+         [:ios, :mac, :android].include? platform
       end
     end
   end
