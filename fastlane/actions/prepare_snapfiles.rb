@@ -33,7 +33,7 @@ module Fastlane
 					File.open(path+"/Snapfile", "w") do |fo|
 						fo.puts template
 						fo.puts "\n"
-						fo.puts "screenshots_path \"#{path}\""
+						fo.puts "output_directory \"fastlane/#{path}\""
 						fo.puts "\n"
 						fo.puts "devices([\"#{device}\"])"
 						fo.puts "\n"
