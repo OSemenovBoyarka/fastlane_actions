@@ -22,8 +22,7 @@ module Fastlane
 			resultPaths = []
 			ios_version = params[:ios_version]
 			langs.each do |item|
-                language = item.kind_of?(Array) ? item[0] : item
-                locale = item.kind_of?(Array) ? item[1] : item
+                language = item
 				devices.each do |device|
 					path = basePath+"/"+locale+"/"+device
 					if not ios_version.empty? 
@@ -37,7 +36,7 @@ module Fastlane
 						fo.puts "\n"
 						fo.puts "devices([\"#{device}\"])"
 						fo.puts "\n"
-						fo.puts "languages([[\"#{language}\",\"#{locale}\"]])"
+						fo.puts "languages([\"#{language}\"])"
 						fo.puts "\n"
 						fo.puts "ios_version '#{ios_version}'" unless ios_version.empty?
 					end
