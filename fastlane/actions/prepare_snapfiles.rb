@@ -24,7 +24,7 @@ module Fastlane
 			langs.each do |item|
                 language = item
 				devices.each do |device|
-					path = basePath+"/"+locale+"/"+device
+					path = basePath+"/"+language+"/"+device
 					if not ios_version.empty? 
 						path += " (#{ios_version})"
 					end	
