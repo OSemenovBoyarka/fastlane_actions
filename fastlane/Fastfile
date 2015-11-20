@@ -1,1 +1,38 @@
-  
+	lane :ensure_code_clean do
+		ensure_no_debug_code(text: "NSLog",
+    		                 path: "./lib",
+        		        extension: "m")
+	end
+
+
+	desc "Commits and pushes tag and version changes to main repository"
+	
+	lane :push_version_changes do |options|
+  	  	commit_version_bump(
+  	  		force: !(is_ci),
+ 			message: options[:commit_message],                    # create a commit with a custom message
+ 		 	xcodeproj: options[:xcodeproj], # optional, if you have multiple Xcode project files, you must specify your main project here
+		)
+		add_git_tag
+		push_to_git_remote
+	end
+	
+	desc "Reads current version changelog from file CHANGELOG_CURRENT.md and puts it to CHANGELOG.md as new section for current version"
+	desc "Also return current changelog contents"
+	lane :copy_changelog do 
+		update_changelog(
+				version: "#{get_version_number} (#{get_build_number})"
+			)				
+		lane_context[SharedValues::UPDATE_CHANGELOG_CURRENT]
+	end
+	
+	desc "Commits changelog changes to git, use this after 'copy_changelog' lane"
+	lane :commit_changelog do 
+# 		TODO extract changelog commit to another action with nice output 
+# 		ensure we have not staged anything except changelog
+		sh("git reset HEAD")
+# 		adding changed files, we need to add uplevel because this code is executed inside 'fastlane' folder
+		sh("git add ../CHANGELOG.md")
+		sh("git add ../CHANGELOG_CURRENT.md")
+		sh("git commit -m \"Changelog update\"")
+	end  
