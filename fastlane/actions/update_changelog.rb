@@ -11,7 +11,8 @@ module Fastlane
     # - Commit, push and submit the pull request
 
     class UpdateChangelogAction < Action
-    	CHANGELOG_TEMPLATE = "### Fixed\n*\n\n### Added\n*\n\n### Removed\n*"
+    	CHANGELOG_TEMPLATE_LEGACY = "### Fixed\n*\n\n### Added\n*\n\n### Removed\n*"
+    	CHANGELOG_TEMPLATE = "* Put your changes here one by one, you can use markdown syntax"
     
       def self.run(params)
 
@@ -21,7 +22,9 @@ module Fastlane
         version = params[:version]
 
         currentChangeLog = File.read(currentChangelogFilename)
-      	raise "You have not provided changelog for build. Please, fill in file CHANGELOG_CURRENT.md" unless CHANGELOG_TEMPLATE != currentChangeLog
+        changelogErrorMessage = "You have not provided changelog for build. Please, fill in file CHANGELOG_CURRENT.md";
+      	raise changelogErrorMessage unless CHANGELOG_TEMPLATE != currentChangeLog
+      	raise changelogErrorMessage unless CHANGELOG_TEMPLATE_LEGACY != currentChangeLog
         globalChangeLog = File.read(changelogFilename);
 #       prepending contents of current changelog to existing file
         File.open(changelogFilename, 'w') do |fo|
