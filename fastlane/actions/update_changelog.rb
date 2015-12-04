@@ -21,7 +21,7 @@ module Fastlane
 
         version = params[:version]
 
-        currentChangeLog = File.read(currentChangelogFilename)
+        currentChangeLog = File.read(currentChangelogFilename).to_s.strip
         changelogErrorMessage = "You have not provided changelog for build. Please, fill in file CHANGELOG_CURRENT.md";
       	raise changelogErrorMessage unless CHANGELOG_TEMPLATE.to_s != currentChangeLog.to_s
       	raise changelogErrorMessage unless CHANGELOG_TEMPLATE_LEGACY.to_s != currentChangeLog.to_s
