@@ -23,8 +23,8 @@ module Fastlane
 
         currentChangeLog = File.read(currentChangelogFilename)
         changelogErrorMessage = "You have not provided changelog for build. Please, fill in file CHANGELOG_CURRENT.md";
-      	raise changelogErrorMessage unless CHANGELOG_TEMPLATE != currentChangeLog
-      	raise changelogErrorMessage unless CHANGELOG_TEMPLATE_LEGACY != currentChangeLog
+      	raise changelogErrorMessage unless CHANGELOG_TEMPLATE.to_s != currentChangeLog.to_s
+      	raise changelogErrorMessage unless CHANGELOG_TEMPLATE_LEGACY.to_s != currentChangeLog.to_s
         globalChangeLog = File.read(changelogFilename);
 #       prepending contents of current changelog to existing file
         File.open(changelogFilename, 'w') do |fo|
