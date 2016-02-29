@@ -64,6 +64,9 @@ module Fastlane
           File.open(screenshots_path + '/metadata.json', 'w') do |f|
             f.write(metadataJson.to_json)
           end
+
+          ### writing html for compare from assets
+          FileUtils.cp 'actions/screenshots_compare.html', "#{screenshots_path}/screenshots_compare.html"
         end
       end
 
