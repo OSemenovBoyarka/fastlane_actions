@@ -21,7 +21,7 @@ module Fastlane
           # we assume all languages has screenshots for all simulators, so it would be sufficient to check only first language
           @devices = Dir["#{screenshots_path}/#{@languages[0]}/*/"].map { |a| File.basename(a) }
           @title = params[:html_title]
-          template = File.read('actions/screenshots_list.erb')
+          template = File.read('assets/screenshots_list.erb')
           result = ERB.new(template).result(binding)
           File.open(screenshots_path + '/screenshots.html', 'w') do |fo|
             fo.write(result)
@@ -66,7 +66,7 @@ module Fastlane
           end
 
           ### writing html for compare from assets
-          FileUtils.cp 'actions/screenshots_compare.html', "#{screenshots_path}/screenshots_compare.html"
+          FileUtils.cp 'assets/screenshots_compare.html', "#{screenshots_path}/screenshots_compare.html"
         end
       end
 
