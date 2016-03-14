@@ -21,7 +21,7 @@ module Fastlane
           # we assume all languages has screenshots for all simulators, so it would be sufficient to check only first language
           @devices = Dir["#{screenshots_path}/#{@languages[0]}/*/"].map { |a| File.basename(a) }
           @title = params[:html_title]
-          template = File.read('assets/screenshots_list.erb')
+          template = File.read(params[:html_template_path])
           result = ERB.new(template).result(binding)
           File.open(screenshots_path + '/screenshots.html', 'w') do |fo|
             fo.write(result)
@@ -98,6 +98,11 @@ module Fastlane
                                        env_name: 'FL_SNAPSHOT_MULTI_REPORT_HTML_TITLE', # The name of the environment variable
                                        description: 'Title to show in result html', # a short description of this parameter
                                        default_value: 'Screenshots report'
+                                      ),
+          FastlaneCore::ConfigItem.new(key: :html_template_path,
+                                       env_name: 'FL_SNAPSHOT_MULTI_REPORT_HTML_TEMPLATE_PATH', # The name of the environment variable
+                                       description: 'Path to ERB template for HTML report', # a short description of this parameter
+                                       default_value: 'assets/screenshots_list.erb'
                                       )
         ]
       end
