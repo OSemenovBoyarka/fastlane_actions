@@ -173,7 +173,7 @@ function doClick(el) {
   
 function generateCell(lang,filename,device,orientation,counter)
 { 
-    var link = lang + '/' + device +'/' + lang + '/' + device.replace(/\s/g, '') + '-' + filename;
+    var link = lang + '/' + device +'/' + lang + '/' + filename;
     return '<td><a class="screenshotLink" target="_blank" href="' + link + '"><img data-counter="' + counter + '" alt="' + device + ' (' + orientation + ')" style="width: 100%;" src="' + link + '" class="screenshot"></a></td>'; 
 }
 

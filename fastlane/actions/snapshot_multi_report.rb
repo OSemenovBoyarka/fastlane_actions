@@ -31,16 +31,15 @@ module Fastlane
           filenames = {}
 
           orientations = %w(portrait landscape)
-          orientations.each { |o| filenames[o] = [] }
 
           otherOrientation = []
           Dir["#{screenshots_path}/#{@languages[0]}/#{@devices[0]}/#{@languages[0]}/*.png"].each do |fn|
             filename = File.basename(fn)
-            # we don't want device name in files hash as it changes across devices
-            filename.slice!("#{@devices[0].delete(' ')}-")
             added = false
+
             orientations.each do |o|
               next unless filename.include? o
+              filenames[o] ||= []
               filenames[o] << filename
               added = true
               break
@@ -48,6 +47,7 @@ module Fastlane
             otherOrientation << filename unless added
           end
 
+          orientations.delete_if { |orientation| filenames.key?(orientation) == false }
           # if we couldn't detect orientaion - put all that screenshots in 'other' category
           unless otherOrientation.empty?
             filenames['other'] = otherOrientation
@@ -129,7 +129,7 @@ module Fastlane
         #  [:ios, :mac].include? platform
         #
 
-        [:ios, :mac].include? platform
+        [:ios, :mac, :android].include? platform
       end
     end
   end
