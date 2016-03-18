@@ -45,9 +45,10 @@ module Fastlane
               @data[language][orientation] << resulting_path
             end
             FileUtils.rm_rf(screenshots_folder)
+            
+            raise "No screenshots found at '#{base_path}/#{language}/#{screenshots_path_prefix}'" unless screenshots_count > 0
           end
 
-          raise "No screenshots found at '#{base_path}/<langugage_code>/#{screenshots_path_prefix}'" unless screenshots_count > 0
 
           # generating html
           html_template = File.read(params[:html_template_path])
