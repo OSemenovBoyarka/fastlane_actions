@@ -28,25 +28,24 @@ module Fastlane
           Dir[File.join(base_path, '*')].sort.each do |language_folder|
             language = File.basename(language_folder)
             screenshots_folder = File.join(language_folder, screenshots_path_prefix.to_s)
-            Dir[File.join(screenshots_folder, '*.png')].sort.each do |screenshot|
-              screenshots_count += 1
+              Dir[File.join(screenshots_folder, '*.png')].sort.each do |screenshot|
+                screenshots_count += 1
 
-              # we want to move files to base directory and replace timestamp with file order to ensure file names integrity across devices/languages
-              new_filename = File.basename(screenshot).tr '_', '-'
-              new_filename = new_filename.split('-', 2)[1]
-              new_filename = screenshots_count.to_s.rjust(3, '0') + '-' + new_filename
-              FileUtils.mv(screenshot, File.join(language_folder, new_filename))
+                # we want to move files to base directory and replace timestamp with file order to ensure file names integrity across devices/languages
+                new_filename = File.basename(screenshot).tr '_', '-'
+                new_filename = new_filename.split('-', 2)[1]
+                new_filename = screenshots_count.to_s.rjust(3, '0') + '-' + new_filename
+                FileUtils.mv(screenshot, File.join(language_folder, new_filename))
 
-              # creating needed hashes
-              @data[language] ||= {}
-              @data[language][orientation] ||= []
+                # creating needed hashes
+                @data[language] ||= {}
+                @data[language][orientation] ||= []
 
-              resulting_path = File.join('.', language, new_filename)
-              @data[language][orientation] << resulting_path
-            end
+                resulting_path = File.join('.', language, new_filename)
+                @data[language][orientation] << resulting_path
+              end
+            raise "No screenshots found at '#{base_path}/#{language}/#{screenshots_path_prefix}'" unless screenshots_count > 0  
             FileUtils.rm_rf(screenshots_folder)
-            
-            raise "No screenshots found at '#{base_path}/#{language}/#{screenshots_path_prefix}'" unless screenshots_count > 0
           end
 
 
