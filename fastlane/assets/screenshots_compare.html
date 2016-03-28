@@ -337,23 +337,21 @@ function init() {
         
 
         // beautify
-        var tmpImg = new Image();
-        tmpImg.src = img.src;
         imageDisplay.style.height = imageDisplayCompare.style.height     = 'auto';
         imageDisplay.style.width = imageDisplayCompare.style.width     = 'auto';
         
-        var scaleHeight = tmpImg.height / window.innerHeight;
-        var scaleWidth = tmpImg.width * 2 / window.innerWidth;
+        var scaleHeight = img.height / window.innerHeight;
+        var scaleWidth = img.width * 2 / window.innerWidth;
         
         if(scaleHeight > scaleWidth && scaleHeight > 1) {
             imageDisplay.style.height = imageDisplayCompare.style.height = document.documentElement.clientHeight+'px';
         }
         else if(scaleWidth > 1) {
             imageDisplay.style.width = imageDisplayCompare.style.width = (document.documentElement.clientWidth / 2) +'px';
-            imageDisplay.style.paddingTop = imageDisplayCompare.style.paddingTop = parseInt((window.innerHeight - tmpImg.height / scaleWidth) / 2)+'px';
+            imageDisplay.style.paddingTop = imageDisplayCompare.style.paddingTop = parseInt((window.innerHeight - img.height / scaleWidth) / 2)+'px';
         }
         else {
-            imageDisplay.style.paddingTop = imageDisplayCompare.style.paddingTop = parseInt((window.innerHeight - tmpImg.height) / 2)+'px';
+            imageDisplay.style.paddingTop = imageDisplayCompare.style.paddingTop = parseInt((window.innerHeight - img.height) / 2)+'px';
         }
             
         imageDisplay.src             = img.src;
@@ -371,7 +369,7 @@ function init() {
         imageInfo.innerHTML          = '<h2>Current screen: ' + currentScreen + "/" + screensCount + '</h2>';
         imageInfo.innerHTML         += '<h3>'+img.alt+'</h3>';
         imageInfo.innerHTML         += imgName;
-        imageInfo.innerHTML         += '<br />'+tmpImg.height+'&times;'+tmpImg.width+'px';
+        imageInfo.innerHTML         += '<br />'+img.height+'&times;'+img.width+'px';
         
         var currentComment = comments[currentDevice + '|' + currentOrientation + '|' + currentLang1 + '|' + currentLang2 + '|' + currentIndex];
         $(comment).val(currentComment);
