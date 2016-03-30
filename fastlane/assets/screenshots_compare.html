@@ -197,7 +197,7 @@ function commentsReport(comments) {
     $.each(filekeys, function(key, val) {
         var currentKey = actualKey + '|' + val;
         var cmttxt = '<span style="color:grey;">no comment</span>';
-        if(comments[currentKey] !== undefined)
+        if(comments[currentKey] !== undefined && comments[currentKey] !== '')
         {
             cmttxt = comments[currentKey];
             commentExists = true;
@@ -219,8 +219,15 @@ function commentsReport(comments) {
 }
 
 function getImgIndex(name) {
+    var index = null;
     var res = name.split('-');
-    return res[1];
+    if(!isNaN(parseInt(res[0]))) {
+        index = res[0];
+    }
+    else if(!isNaN(parseInt(res[1]))) {
+        index = res[1];
+    }
+    return index;
 }  
 
 function clearComments()
@@ -335,46 +342,50 @@ function init() {
         img = target.parentNode.parentNode.parentNode.children[1].firstChild.firstChild; // img.a.td.tr.td[first].a.img;
         imgCmp = target.parentNode.parentNode.parentNode.children[2].firstChild.firstChild; // img.a.td.tr.td[second].a.img;
         
-
-        // beautify
-        imageDisplay.style.height = imageDisplayCompare.style.height     = 'auto';
-        imageDisplay.style.width = imageDisplayCompare.style.width     = 'auto';
+        var tmpImg = new Image();
+        tmpImg.src = img.src;
         
-        var scaleHeight = img.height / window.innerHeight;
-        var scaleWidth = img.width * 2 / window.innerWidth;
-        
-        if(scaleHeight > scaleWidth && scaleHeight > 1) {
-            imageDisplay.style.height = imageDisplayCompare.style.height = document.documentElement.clientHeight+'px';
-        }
-        else if(scaleWidth > 1) {
-            imageDisplay.style.width = imageDisplayCompare.style.width = (document.documentElement.clientWidth / 2) +'px';
-            imageDisplay.style.paddingTop = imageDisplayCompare.style.paddingTop = parseInt((window.innerHeight - img.height / scaleWidth) / 2)+'px';
-        }
-        else {
-            imageDisplay.style.paddingTop = imageDisplayCompare.style.paddingTop = parseInt((window.innerHeight - img.height) / 2)+'px';
-        }
-            
-        imageDisplay.src             = img.src;
-        imageDisplay.alt             = img.alt;
-        imageDisplay.dataset.counter = img.dataset.counter;
-        currentScreen                = parseInt(img.dataset.counter) + 1;
+        $(tmpImg).load(function(){
+            // beautify
+            imageDisplay.style.height = imageDisplayCompare.style.height     = 'auto';
+            imageDisplay.style.width = imageDisplayCompare.style.width     = 'auto';
 
-        imageDisplayCompare.src             = imgCmp.src;
-        imageDisplayCompare.alt             = imgCmp.alt;
-        imageDisplayCompare.dataset.counter = imgCmp.dataset.counter;
+            var scaleHeight = tmpImg.height / window.innerHeight;
+            var scaleWidth = tmpImg.width * 2 / window.innerWidth;
 
-        var imgName = img.src.split("/").pop();
-        currentIndex = getImgIndex(imgName);
-        
-        imageInfo.innerHTML          = '<h2>Current screen: ' + currentScreen + "/" + screensCount + '</h2>';
-        imageInfo.innerHTML         += '<h3>'+img.alt+'</h3>';
-        imageInfo.innerHTML         += imgName;
-        imageInfo.innerHTML         += '<br />'+img.height+'&times;'+img.width+'px';
-        
-        var currentComment = comments[currentDevice + '|' + currentOrientation + '|' + currentLang1 + '|' + currentLang2 + '|' + currentIndex];
-        $(comment).val(currentComment);
+            if(scaleHeight > scaleWidth && scaleHeight > 1) {
+                imageDisplay.style.height = imageDisplayCompare.style.height = document.documentElement.clientHeight+'px';
+            }
+            else if(scaleWidth > 1) {
+                imageDisplay.style.width = imageDisplayCompare.style.width = (document.documentElement.clientWidth / 2) +'px';
+                imageDisplay.style.paddingTop = imageDisplayCompare.style.paddingTop = parseInt((window.innerHeight - img.height / scaleWidth) / 2)+'px';
+            }
+            else {
+                imageDisplay.style.paddingTop = imageDisplayCompare.style.paddingTop = parseInt((window.innerHeight - img.height) / 2)+'px';
+            }
 
-        overlay.style.display        = "block";
+            imageDisplay.src             = img.src;
+            imageDisplay.alt             = img.alt;
+            imageDisplay.dataset.counter = img.dataset.counter;
+            currentScreen                = parseInt(img.dataset.counter) + 1;
+
+            imageDisplayCompare.src             = imgCmp.src;
+            imageDisplayCompare.alt             = imgCmp.alt;
+            imageDisplayCompare.dataset.counter = imgCmp.dataset.counter;
+
+            var imgName = img.src.split("/").pop();
+            currentIndex = getImgIndex(imgName);
+
+            imageInfo.innerHTML          = '<h2>Current screen: ' + currentScreen + "/" + screensCount + '</h2>';
+            imageInfo.innerHTML         += '<h3>'+img.alt+'</h3>';
+            imageInfo.innerHTML         += imgName;
+            imageInfo.innerHTML         += '<br />'+tmpImg.height+'&times;'+tmpImg.width+'px';
+
+            var currentComment = comments[currentDevice + '|' + currentOrientation + '|' + currentLang1 + '|' + currentLang2 + '|' + currentIndex];
+            $(comment).val(currentComment);
+
+            overlay.style.display        = "block";
+        });
       });
     }
 
