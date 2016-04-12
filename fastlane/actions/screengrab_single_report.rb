@@ -33,8 +33,10 @@ module Fastlane
 
                 # we want to move files to base directory and replace timestamp with file order to ensure file names integrity across devices/languages
                 new_filename = File.basename(screenshot).tr '_', '-'
-                new_filename = new_filename.split('-', 2)[1]
-                new_filename = screenshots_count.to_s.rjust(3, '0') + '-' + new_filename
+                if params[:append_screen_number]
+                  new_filename = new_filename.split('-', 2)[1]
+                  new_filename = screenshots_count.to_s.rjust(3, '0') + '-' + new_filename
+                end
                 FileUtils.mv(screenshot, File.join(language_folder, new_filename))
 
                 # creating needed hashes
@@ -91,14 +93,20 @@ module Fastlane
                                        description: 'Name of resulting html. Default is screnshots.html',
                                        default_value: 'screenshots.html'),
           FastlaneCore::ConfigItem.new(key: :html_template_path,
-                                       env_name: 'FL_SNAPSHOT_MULTI_REPORT_HTML_TEMPLATE_PATH', # The name of the environment variable
+                                       env_name: 'FL_SCREENGRAB_SINGLE_REPORT_HTML_TEMPLATE_PATH', # The name of the environment variable
                                        description: 'Path to ERB template for HTML report', # a short description of this parameter
                                        default_value: 'assets/screenshots_single.html.erb'
                                       ),
           FastlaneCore::ConfigItem.new(key: :path_prefix,
-                                       env_name: 'FL_SNAPSHOT_MULTI_REPORT_HTML_SCREENSHOTS_PATH_PREFIX', # The name of the environment variable
+                                       env_name: 'FL_SCREENGRAB_SINGLE_REPORT_HTML_SCREENSHOTS_PATH_PREFIX', # The name of the environment variable
                                        description: 'Prefix, represents relative path for screenshots folder relative to locale folder', # a short description of this parameter
                                        default_value: 'images/phoneScreenshots'
+                                      )
+          FastlaneCore::ConfigItem.new(key: :append_screen_number,
+                                       env_name: 'FL_SCREENGRAB_SINGLE_REPORT_APPEND_SCREEN_NUMBER', # The name of the environment variable
+                                       description: 'Should action append order number to filename for each screenshots', # a short description of this parameter
+                                       default_value: true,
+                                       optional: true
                                       )
         ]
       end
