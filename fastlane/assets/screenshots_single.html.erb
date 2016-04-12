@@ -132,6 +132,7 @@
             // beautify
             var tmpImg = new Image();
             tmpImg.src = img.src;
+            $(tmpImg).load(function(){
             imageDisplay.style.height     = 'auto';
             imageDisplay.style.width     = 'auto';
             if (window.innerHeight < tmpImg.height) {
@@ -151,6 +152,7 @@
             imageInfo.innerHTML         += '<br />'+tmpImg.height+'&times;'+tmpImg.width+'px';
                     
             overlay.style.display        = "block";
+            });
           });
         }
         
