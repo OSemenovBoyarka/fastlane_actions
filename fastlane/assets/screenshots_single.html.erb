@@ -130,14 +130,16 @@
             }
             
             // beautify
+            var tmpImg = new Image();
+            tmpImg.src = img.src;
             imageDisplay.style.height     = 'auto';
             imageDisplay.style.width     = 'auto';
-            if (window.innerHeight < img.height) {
+            if (window.innerHeight < tmpImg.height) {
               imageDisplay.style.height = document.documentElement.clientHeight+'px';
             } else if (window.innerWidth < tmpImg.width) {
               imageDisplay.style.width = document.documentElement.clientWidth;+'px';
             } else {
-              imageDisplay.style.paddingTop = parseInt((window.innerHeight - img.height) / 2)+'px';
+              imageDisplay.style.paddingTop = parseInt((window.innerHeight - tmpImg.height) / 2)+'px';
             }
 
             imageDisplay.src             = img.src;
@@ -146,8 +148,7 @@
             
             imageInfo.innerHTML          = '<h3>'+img.alt+'</h3>';
             imageInfo.innerHTML         += img.src.split("/").pop();
-            imageInfo.innerHTML         += '<br />'+img.height+'&times;'+img.width+'px';
-
+            imageInfo.innerHTML         += '<br />'+tmpImg.height+'&times;'+tmpImg.width+'px';
                     
             overlay.style.display        = "block";
           });
