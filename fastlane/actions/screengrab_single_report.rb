@@ -101,7 +101,7 @@ module Fastlane
                                        env_name: 'FL_SCREENGRAB_SINGLE_REPORT_HTML_SCREENSHOTS_PATH_PREFIX', # The name of the environment variable
                                        description: 'Prefix, represents relative path for screenshots folder relative to locale folder', # a short description of this parameter
                                        default_value: 'images/phoneScreenshots'
-                                      )
+                                      ),
           FastlaneCore::ConfigItem.new(key: :append_screen_number,
                                        env_name: 'FL_SCREENGRAB_SINGLE_REPORT_APPEND_SCREEN_NUMBER', # The name of the environment variable
                                        description: 'Should action append order number to filename for each screenshots', # a short description of this parameter
