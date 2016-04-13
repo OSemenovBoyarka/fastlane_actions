@@ -130,9 +130,8 @@
             }
             
             // beautify
-            var tmpImg = new Image();
-            tmpImg.src = img.src;
-            $(tmpImg).load(function(){
+            var tmpImg = new Image();            
+            tmpImg.addEventListener("load",function(){
             imageDisplay.style.height     = 'auto';
             imageDisplay.style.width     = 'auto';
             if (window.innerHeight < tmpImg.height) {
@@ -153,6 +152,7 @@
                     
             overlay.style.display        = "block";
             });
+            tmpImg.src = img.src;
           });
         }
         
