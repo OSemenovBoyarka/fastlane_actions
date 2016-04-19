@@ -136,8 +136,8 @@ module Fastlane
         #
         #  [:ios, :mac].include?(platform)
         #
-
-        platform == :android
+        # this action is platform independent
+        true
       end
     end
   end
