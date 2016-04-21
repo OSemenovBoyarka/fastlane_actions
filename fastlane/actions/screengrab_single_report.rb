@@ -1,4 +1,5 @@
 require 'erb'
+require 'fastimage'
 
 module Fastlane
   module Actions
@@ -22,13 +23,17 @@ module Fastlane
           # this is adopted code from https://github.com/fastlane/fastlane/blob/master/snapshot/lib/snapshot/reports_generator.rb
           @data = {}
 
-          orientation = 'portrait'
           screenshots_path_prefix = params[:path_prefix]
           screenshots_count = 0
           Dir[File.join(base_path, '*')].sort.each do |language_folder|
             language = File.basename(language_folder)
             screenshots_folder = File.join(language_folder, screenshots_path_prefix.to_s)
             Dir[File.join(screenshots_folder, '*.png')].sort.each do |screenshot|
+              # detecting orientation
+              image_size = FastImage.size(screenshot)
+              # returned array contains two items [width, height]
+              orientation = image_size[0] > image_size[1] ? 'landscape' : 'portrait'
+
               screenshots_count += 1
 
               # we want to move files to base directory and replace timestamp with file order to ensure file names integrity across devices/languages
@@ -37,7 +42,8 @@ module Fastlane
                 new_filename = new_filename.split('-', 2)[1]
                 new_filename = screenshots_count.to_s.rjust(3, '0') + '-' + new_filename
               end
-              FileUtils.mv(screenshot, File.join(language_folder, new_filename))
+              new_path =  File.join(language_folder, new_filename)
+              FileUtils.mv(screenshot, new_path) unless screenshot == new_path
 
               # creating needed hashes
               @data[language] ||= {}
@@ -47,7 +53,7 @@ module Fastlane
               @data[language][orientation] << resulting_path
             end
             raise "No screenshots found at '#{base_path}/#{language}/#{screenshots_path_prefix}'" unless screenshots_count > 0
-            FileUtils.rm_rf(screenshots_folder)
+            FileUtils.rm_rf(screenshots_folder) unless screenshots_path_prefix.to_s == '' # we shouldn't delete folder, where screenshots were copied
           end
 
           # generating html
