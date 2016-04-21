@@ -26,6 +26,8 @@ module Fastlane
           screenshots_path_prefix = params[:path_prefix]
           screenshots_count = 0
           Dir[File.join(base_path, '*')].sort.each do |language_folder|
+            next unless File.directory? language_folder
+            
             language = File.basename(language_folder)
             screenshots_folder = File.join(language_folder, screenshots_path_prefix.to_s)
             Dir[File.join(screenshots_folder, '*.png')].sort.each do |screenshot|
