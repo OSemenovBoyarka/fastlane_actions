@@ -1,1 +1,30 @@
 
+desc 'Jenkins chechs out repository in detached state,'
+desc 'this lane will ensure you are on correct branch,'
+desc 'as was set by GIT_BRANCH param, branch is set to'
+desc 'remote tracking, and all changes are pulled'
+lane :prepare_git_for_ci do
+  # fool-proof protection :)
+  if is_ci
+    #     	we cant use this check, because jenkins injects signing config files before build and repository will always be dirty.
+    # 		repositry clean state ensured by jenkins build step currently
+    # ensure_git_status_clean
+
+    # this env variable is passed by Jenkins, to know, which branch to build
+    branch = ENV['GIT_BRANCH_NAME'].to_s
+    puts "GIT_BRACH_NAME was: #{branch}"
+    branch = ENV['GIT_BRANCH'].to_s if branch.to_s.strip == ''
+    puts "GIT_BRANCH was: #{branch}"
+
+    # CI could set branch name with repo ref, so we need to remove it
+    branch = branch.dup
+    branch.slice!('origin/')
+    puts "sliced GIT_BRANCH was: #{branch}"
+
+    # if CI has specified brach to build, we need to checkout to it, to be able push changes back if needed
+    sh("git checkout #{branch}") unless branch.to_s.strip == ''
+    sh("git branch --set-upstream-to=origin/#{branch} #{branch}")
+    # be sure to build from latest revision, if we have any conflicting changes on local branch - we should ignore them
+    sh('git pull -X theirs')
+  end
+end
