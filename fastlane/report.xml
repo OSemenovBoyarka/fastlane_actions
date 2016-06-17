@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fastlane.lanes">
+    
+      
+      <testcase classname="fastlane.lanes" name="0: is_ci" time="0.000233">
+        
+      </testcase>
+    
+  </testsuite>
+</testsuites>
