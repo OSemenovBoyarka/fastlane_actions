@@ -15,13 +15,13 @@ module Fastlane
       CHANGELOG_TEMPLATE = '* Put your changes here one by one, you can use markdown syntax'.freeze
 
       def self.run(params)
-        changelogFilename = 'CHANGELOG.md'
-        currentChangelogFilename = 'CHANGELOG_CURRENT.md'
+        changelogFilename = params[:log_filename]
+        currentChangelogFilename = params[:current_log_filename]
 
         version = params[:version]
 
         currentChangeLog = File.read(currentChangelogFilename).to_s.strip
-        changelogErrorMessage = 'You have not provided changelog for build. Please, fill in file CHANGELOG_CURRENT.md'
+        changelogErrorMessage = params[:current_log_error_message]
         raise changelogErrorMessage unless CHANGELOG_TEMPLATE.to_s != currentChangeLog.to_s
         raise changelogErrorMessage unless CHANGELOG_TEMPLATE_LEGACY.to_s != currentChangeLog.to_s
         globalChangeLog = File.read(changelogFilename)
@@ -62,7 +62,19 @@ module Fastlane
                                        description: 'Complete version string, which will be added as current version to changelog', # a short description of this parameter
                                        verify_block: proc do |value|
                                                        raise "No new app version for UpdateChangeLog given, pass using `version: 'token'`".red unless value && !value.empty?
-                                                     end)
+                                                     end),
+          FastlaneCore::ConfigItem.new(key: :log_filename,
+                                       env_name: 'FL_CHANGELOG_FILE_NAME', # The name of the environment variable
+                                       description: 'Optional file name of general changelog', # a short description of this parameter
+                                       default_value: 'CHANGELOG.md'),
+          FastlaneCore::ConfigItem.new(key: :current_log_filename,
+                                       env_name: 'FL_CURRENT_CHANGELOG_FILE_NAME', # The name of the environment variable
+                                       description: 'Optional file name of current changelog', # a short description of this parameter
+                                       default_value: 'CHANGELOG_CURRENT.md'),
+          FastlaneCore::ConfigItem.new(key: :current_log_error_message,
+                                       env_name: 'FL_CUSTOM_ERROR_MESSAGE', # The name of the environment variable
+                                       description: 'Optional custom message to be shown if current changelog is not valid', # a short description of this parameter
+                                       default_value: 'You have not provided changelog for build. Please, fill in file CHANGELOG_CURRENT.md')
         ]
         # Define all options your action supports.
       end
